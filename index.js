@@ -2,11 +2,13 @@ const express = require("express");
 
 const cors = require("cors");
 
-const router = require("./routes");
+const router = require("./backend/routes");
 
 const mongoose = require("mongoose");
 
+
 const app = express();
+
 
 //const  humongouspenis  = (req, res, next) => {
    // console.log(`${req.protocol}://${req.get("host")}${req.originalUrl}${moment().format()}`);
@@ -14,6 +16,7 @@ const app = express();
 //}
 
 //app.use(humongouspenis);
+
 
 const uri = "mongodb+srv://nassim:passwordy@cluster0.4116f.mongodb.net/users?retryWrites=true&w=majority";
 mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true }, () => console.log("ezpz pp"))

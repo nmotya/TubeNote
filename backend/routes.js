@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const Member = require("./usermodel");
+const Member = require("../usermodel");
 const uuid = require("uuid");
 
 
