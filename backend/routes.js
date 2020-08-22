@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 const Member = require("../usermodel");
-const uuid = require("uuid");
-
 
 //Get all users
 router.get("/", async function(req, res){
@@ -25,20 +23,22 @@ router.get("/:id", async function(req, res){
 });
 
 // Create a new user
-router.post("/", async (req, res) =>{
-    try{
-        const newMember = new Member ({
-            username: req.body.username,
-            email: req.body.email
-        });
-        const savepost = await newMember.save();
-        res.json(savepost);
-        console.log("ez");
-    }catch (err) {
-        res.status("400").json({message: "Error"});
-    }
-});
-
+const createUser = (id, email) => {
+    router.post("/", async (req, res) =>{
+        try{
+            const newMember = new Member ({
+                google_id: id,
+                email: email,
+                active: true
+            });
+            const savepost = await newMember.save();
+            res.json(savepost);
+            console.log("ez");
+        }catch (err) {
+            res.status("400").json({message: "Error"});
+        }
+    });
+}
 //Delete user based on their ID
 router.delete("/:id", async(req, res) => {
     try{

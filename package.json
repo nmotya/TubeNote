@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
@@ -11,6 +12,8 @@
   "author": "Nassim Motya",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.20.0",
+    "axios-chrome-messaging-adapter": "^0.4.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
