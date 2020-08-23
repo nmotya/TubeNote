@@ -27,6 +27,16 @@ function create_auth_endpoint() {
     return openId_endpoint_url;
 }
 
+const createUser = (wap, bap) =>{
+    fetch("http://localhost:5000/api/users",{
+        method: "POST",
+        mode:"no-cors",
+        headers: {
+            'Content-Type':'application/x-www-form-urlencoded'
+        },
+        body: `google_id=${wap}&email=${bap}`
+    });
+}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'login') {
@@ -38,7 +48,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 'interactive': true
             }, function (redirect_url) {
                 if (chrome.runtime.lastError) {
-                    alert(redirect_url);
+                    
                     alert("STOOPID");
                 } else {
                     let id_token = redirect_url.substring(redirect_url.indexOf('id_token=') + 9);
@@ -49,6 +59,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         && user_info.aud === CLIENT_ID) {  
                             
                             chrome.identity.getProfileUserInfo(function(userInfo) {
+                                createUser(userInfo.id, userInfo.email);
                                 console.log(userInfo.id);
                                console.log(userInfo.email);
                                });

@@ -23,22 +23,21 @@ router.get("/:id", async function(req, res){
 });
 
 // Create a new user
-const createUser = (id, email) => {
-    router.post("/", async (req, res) =>{
-        try{
-            const newMember = new Member ({
-                google_id: id,
-                email: email,
-                active: true
-            });
-            const savepost = await newMember.save();
-            res.json(savepost);
-            console.log("ez");
-        }catch (err) {
-            res.status("400").json({message: "Error"});
-        }
-    });
-}
+
+router.post("/", async (req, res) =>{
+    try{
+        const newMember = new Member ({
+            google_id: req.body.google_id,
+            email: req.body.email
+        });
+        const savepost = await newMember.save();
+        res.json(savepost);
+        console.log("ez");
+    }catch (err) {
+        res.status("400").json({message: "Error"});
+    }
+});
+
 //Delete user based on their ID
 router.delete("/:id", async(req, res) => {
     try{
