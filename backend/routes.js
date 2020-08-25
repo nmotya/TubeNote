@@ -28,7 +28,7 @@ router.post("/", async (req, res) =>{
     try{
         const newMember = new Member ({
             google_id: req.body.google_id,
-            email: req.body.email
+            notes: req.body.notes
         });
         const savepost = await newMember.save();
         res.json(savepost);

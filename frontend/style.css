@@ -17,6 +17,10 @@ h2{
     text-shadow: 0px 1px rgba(0,0,0,0.2);
     text-align: center;
 }
+#h2-signed-in{
+    position: absolute;
+    top: 33%;
+}
 
 #google-button{
     position: absolute;
@@ -24,11 +28,12 @@ h2{
 }
 
 #sign-in{
-    
+
 }
 
 #sign-out{
-    
+    position: absolute;
+    top: 75%;      
 }
 
 /*Default google sign-in button style*/

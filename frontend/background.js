@@ -27,16 +27,22 @@ function create_auth_endpoint() {
     return openId_endpoint_url;
 }
 
-const createUser = (wap, bap) =>{
+const createUser = (wap) =>{
     fetch("http://localhost:5000/api/users",{
         method: "POST",
         mode:"no-cors",
         headers: {
             'Content-Type':'application/x-www-form-urlencoded'
         },
-        body: `google_id=${wap}&email=${bap}`
+        body: `google_id=${wap}&notes=${[]}`
     });
 }
+
+chrome.tabs.onUpdated.addListener(function(tab){
+	chrome.tabs.executeScript(tab.ib, {
+		file: 'click-script.js'
+	},() => chrome.runtime.lastError);
+});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'login') {
@@ -57,15 +63,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                     if ((user_info.iss === 'https://accounts.google.com' || user_info.iss === 'accounts.google.com')
                         && user_info.aud === CLIENT_ID) {  
-                            
+                            console.log(user_info.sub);
+                              
                             chrome.identity.getProfileUserInfo(function(userInfo) {
-                                createUser(userInfo.id, userInfo.email);
+                                createUser(user_info.sub);
                                 console.log(userInfo.id);
                                console.log(userInfo.email);
+                               console.log("afsaf");
                                });
                         user_signed_in = true;
                         sendResponse("success");
                         chrome.browserAction.setPopup({ popup: './frontend/signed-in.html' });
+                        chrome.tabs.reload();
                     
                     } else {
                         // invalid credentials
@@ -87,3 +96,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse(is_user_signed_in());
     }
 });
+

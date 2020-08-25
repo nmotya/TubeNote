@@ -9,15 +9,25 @@
           "./frontend/background.js",
           "./jsrsasign-all-min.js"
       ],
-      "persistent": false
+      "persistent": false,
+      "run_at": "document_end"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*", "https://www.youtube.com/*"], 
+      "js":["jquery.js", "./frontend/click-script.js"], 
+      "run_at": "document_end"
+    }
+  ],
   "browser_action": {
       "default_icon":"jugular.png",
       "default_popup": "frontend/index.html"
   },
   "permissions": [
       "identity",
-      "identity.email"
+      "identity.email",
+      "tabs",
+      "https://www.youtube.com/"
   ],
   "content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'"
 }
