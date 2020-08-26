@@ -4,6 +4,12 @@
   "version": "1.0",
   "manifest_version": 2,
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqPDcad6CrSoqFqUMVIO420nJpeWxff10BpZlL/JI+TqYo3On3RlAUCC6Bu0TcRfroewTDGFyaZ8vCGtiRnHmQYuD6UPl/M52gbz9/57qz1QcLFQxs0wSii7KK5mUsIrs11liSNFQCt73QCOn844QkiEeIcfO5diFBMq1TM4oP8PUwJIkBOFUPgduDf5cjcK7Hu80BL8JhbvvOWNVwVqHheELcwkj8/9xWDD+1Av2JZQqoU/yvE22ME5vso+dQuPPtKOaCdP/iM/+y9oPdidOtXmC9gG8oCl/bLLhM+RU306W03mgk+yZen+3rRYus6eejnZiI60PaPl7uZ3VFP7TIwIDAQAB",
+  "permissions": [
+    "identity",
+    "identity.email",
+    "tabs",
+    "https://www.youtube.com/"
+],
   "background": {
       "scripts": [
           "./frontend/background.js",
@@ -23,11 +29,8 @@
       "default_icon":"jugular.png",
       "default_popup": "frontend/index.html"
   },
-  "permissions": [
-      "identity",
-      "identity.email",
-      "tabs",
-      "https://www.youtube.com/"
+  "web_accessible_resources": [
+    "./frontend/input.html"
   ],
   "content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'"
 }

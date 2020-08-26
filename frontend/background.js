@@ -38,11 +38,27 @@ const createUser = (wap) =>{
     });
 }
 
-chrome.tabs.onUpdated.addListener(function(tab){
-	chrome.tabs.executeScript(tab.ib, {
-		file: 'click-script.js'
-	},() => chrome.runtime.lastError);
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+    if(changeInfo && changeInfo.status == "complete"){
+        chrome.tabs.executeScript(tab.ib, {
+            file: 'click-script.js'
+        },() => chrome.runtime.lastError);
+    }
 });
+
+
+
+//chrome.tabs.onUpdated.addListener(function(tab){
+
+//});
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.message === "popup"){
+        chrome.browserAction.setPopup({ popup: './frontend/input.html' });
+        //chrome.browserAction.setIcon({path: "bugular.png"});
+    }
+});
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'login') {
@@ -75,7 +91,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         sendResponse("success");
                         chrome.browserAction.setPopup({ popup: './frontend/signed-in.html' });
                         chrome.tabs.reload();
-                    
                     } else {
                         // invalid credentials
                         console.log("Invalid credentials.");
