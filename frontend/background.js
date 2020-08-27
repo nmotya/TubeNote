@@ -5,6 +5,7 @@ const REDIRECT_URI = encodeURIComponent('https://odmdklnahihglmjpafakencppfpefmn
 const SCOPE = encodeURIComponent('openid');
 const STATE = encodeURIComponent('meet' + Math.random().toString(36).substring(2, 15));
 const PROMPT = encodeURIComponent('consent');
+var user_info;
 
 let user_signed_in = false;
 
@@ -27,14 +28,14 @@ function create_auth_endpoint() {
     return openId_endpoint_url;
 }
 
-const createUser = (wap) =>{
+const createUser = (idnumber) =>{
     fetch("http://localhost:5000/api/users",{
         method: "POST",
         mode:"no-cors",
         headers: {
             'Content-Type':'application/x-www-form-urlencoded'
         },
-        body: `google_id=${wap}&notes=${[]}`
+        body: `google_id=${idnumber}&notes=${[]}`
     });
 }
 
@@ -46,18 +47,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     }
 });
 
-
-
-//chrome.tabs.onUpdated.addListener(function(tab){
-
-//});
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.message === "popup"){
+    if(request.message === "input"){
         chrome.browserAction.setPopup({ popup: './frontend/input.html' });
-        //chrome.browserAction.setIcon({path: "bugular.png"});
     }
 });
+
+
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -70,12 +66,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 'interactive': true
             }, function (redirect_url) {
                 if (chrome.runtime.lastError) {
-                    
                     alert("STOOPID");
                 } else {
                     let id_token = redirect_url.substring(redirect_url.indexOf('id_token=') + 9);
                     id_token = id_token.substring(0, id_token.indexOf('&'));
-                    const user_info = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(id_token.split(".")[1]));
+                    user_info = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(id_token.split(".")[1]));
 
                     if ((user_info.iss === 'https://accounts.google.com' || user_info.iss === 'accounts.google.com')
                         && user_info.aud === CLIENT_ID) {  

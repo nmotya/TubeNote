@@ -16,6 +16,7 @@ const app = express();
 //}
 //app.use(humongouspenis);
 
+app.use(cors());
 
 const uri = "mongodb+srv://nassim:passwordy@cluster0.4116f.mongodb.net/users?retryWrites=true&w=majority";
 mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true }, () => console.log("ezpz pp"))

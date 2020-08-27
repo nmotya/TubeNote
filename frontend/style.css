@@ -33,10 +33,34 @@ h2{
 
 #sign-out{
     position: absolute;
-    top: 75%;      
+    top: 75%;    
 }
 
-/*Default google sign-in button style*/
+#note-input{
+    position: absolute;
+    left: 17%;
+    top: 36%;
+}
+#submit-button{
+    background-color: transparent;
+    border: 2px  solid  cyan;
+    position: absolute;
+    left: 27.5%;
+    bottom: 12%;
+    width: 45%;
+    height: 15%;
+    border-radius: 25px;
+}
+#submit-button:focus {
+    outline: none;
+  }
+  #submit-button:hover {
+      background-color: cyan;
+      transition: 0.3s;
+  }
+
+
+/*Default google sign-in button style below*/
 .google-btn {
     width: 184px;
     height: 42px;
@@ -77,6 +101,5 @@ h2{
 .google-btn:active {
     background: #1669F2;
 }
-
-
 @import url(https://fonts.googleapis.com/css?family=Roboto:500);
+/*Default google sign-in button style above*/
