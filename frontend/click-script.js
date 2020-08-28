@@ -22,7 +22,7 @@ function dompath( element )
         $(document).on("click", 'a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer', function() {
             alert($('[aria-label~="like"]').attr("aria-pressed"));
             if ($('[aria-label~="like"]').attr("aria-pressed") === "true"){
-                chrome.runtime.sendMessage({ message: 'input' });
+                chrome.runtime.sendMessage({ message: 'input'});
             }
         });
         $(document).on("click", 'paper-checkbox#checkbox.style-scope.ytd-playlist-add-to-option-renderer', function() {

@@ -1,38 +1,35 @@
 
-var user_google_id;
-
-//chrome.runtime.onMessage.addListener((request, sender, sendResponse) =>{
-   // if (request.from === "background"){
-  //      user_google_id = request.info;
-  //      alert("gangnam style");
- //       console.log("gangnam style");
-  //  }
-//    return true;
-//})
 
 
-const getGoogleId = () => {
-    chrome.runtime.sendMessage({ from: 'background', info: user_info.sub});
+const putNote = (link, input, google_id) =>{
+    chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+        var tab = tabs[0].url
+        fetch(`http://localhost:5000/api/users/${google_id}`,{
+            method: "PATCH",
+            body: JSON.stringify({ 
+                url: tab, 
+                note: input 
+            }), 
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+    });
 }
 
-
-const putNote = (link, input) =>{
-    var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    fetch("http://localhost:5000/api/users/100713083412008910651",{
-        method: "PATCH",
-        body: JSON.stringify({ 
-            url: "foo", 
-            note: input 
-        }), 
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
+const getGoogleId = (input) => {
+    chrome.runtime.sendMessage({ from: 'submit-note'}, function(response){
+        if (input != ""){
+            putNote("youtube", input, response);
         }
     });
+    window.close();
+    chrome.runtime.sendMessage({message : "note-popup", note: input});
 }
 
 function submitNote(){
     const userInput = document.getElementById("note-input").value;
-    putNote("youtube", userInput.trim());
+    getGoogleId(userInput);
 }
 
 function additionalBs(event){

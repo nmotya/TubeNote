@@ -3,18 +3,18 @@ html, body{
     width: 400px;
     margin: 0;
     padding: 0;
-    background-image: linear-gradient(#e30b5d, orange);
+    background-color: #0444FD;
 }
 
 h1{
-    color: cyan;
-    text-shadow: 0px 3px rgba(0,0,0,0.2);
+    color: #FD5972;
+    text-shadow: 0px 6px rgba(0,0,0,0.2);
     text-align: center;
     font-size: 10vw;
 }
 h2{
-    color: indigo;
-    text-shadow: 0px 1px rgba(0,0,0,0.2);
+    color :white;
+    text-shadow: 0px 4px rgba(0,0,0,0.2);
     text-align: center;
 }
 #h2-signed-in{
@@ -43,7 +43,8 @@ h2{
 }
 #submit-button{
     background-color: transparent;
-    border: 2px  solid  cyan;
+    color: white;
+    border: 2px  solid  #FD5972;
     position: absolute;
     left: 27.5%;
     bottom: 12%;
@@ -55,7 +56,7 @@ h2{
     outline: none;
   }
   #submit-button:hover {
-      background-color: cyan;
+      background-color: #FD5972;
       transition: 0.3s;
   }
 

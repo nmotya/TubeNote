@@ -1,11 +1,12 @@
 
+
 const CLIENT_ID = encodeURIComponent('448793002559-gcai9vbq2tfq60bfains56cugl5dge9d.apps.googleusercontent.com');
 const RESPONSE_TYPE = encodeURIComponent('id_token');
 const REDIRECT_URI = encodeURIComponent('https://odmdklnahihglmjpafakencppfpefmnk.chromiumapp.org')
 const SCOPE = encodeURIComponent('openid');
 const STATE = encodeURIComponent('meet' + Math.random().toString(36).substring(2, 15));
 const PROMPT = encodeURIComponent('consent');
-var user_info;
+var userGoogleId;
 
 let user_signed_in = false;
 
@@ -48,13 +49,24 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.message === "input"){
+    if(request.message === "input" && is_user_signed_in() ){
         chrome.browserAction.setPopup({ popup: './frontend/input.html' });
     }
 });
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.from === 'submit-note'){
+        sendResponse(userGoogleId);
+    }
+    return true;
+});
 
-
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.message === "note-popup"){
+        chrome.browserAction.setPopup({ popup: './frontend/note.html' });
+        chrome.executeScript({file: 'note.js'})
+    }
+});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'login') {
@@ -70,7 +82,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 } else {
                     let id_token = redirect_url.substring(redirect_url.indexOf('id_token=') + 9);
                     id_token = id_token.substring(0, id_token.indexOf('&'));
-                    user_info = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(id_token.split(".")[1]));
+                    const user_info = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(id_token.split(".")[1]));
+                    userGoogleId = user_info.sub;
 
                     if ((user_info.iss === 'https://accounts.google.com' || user_info.iss === 'accounts.google.com')
                         && user_info.aud === CLIENT_ID) {  

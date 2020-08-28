@@ -7,7 +7,7 @@
   "permissions": [
     "identity",
     "identity.email",
-    "tabs",
+    "activeTab",
     "https://www.youtube.com/"
 ],
   "background": {
