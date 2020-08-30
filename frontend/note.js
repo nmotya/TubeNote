@@ -1,16 +1,7 @@
-
-
-
-
-//chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    //document.addEventListener('DOMNodeInserted', function(){
-     //   if (request.message === "note-popup"){
-                
-
-  //              alert("as");
-            
- //       }
- //   });
-//});
-
-document.querySelector("#h2-signed-in").innerHTML = request.note;
+chrome.storage.local.get("note", function(data) {
+    if(typeof data.note == "undefined") {
+        document.querySelector("#h2-signed-in").innerHTML = "Whoops, we couldn't get your note";
+    } else {
+        document.querySelector("#h2-signed-in").innerHTML = data.note;
+    }
+});

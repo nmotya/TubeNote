@@ -7,7 +7,8 @@
   "permissions": [
     "identity",
     "identity.email",
-    "activeTab",
+    "tabs",
+    "storage",
     "https://www.youtube.com/"
 ],
   "background": {
@@ -21,7 +22,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*", "https://www.youtube.com/*"], 
-      "js":["jquery.js", "./frontend/click-script.js"], 
+      "js":["jquery.js", "./frontend/note.js"], 
       "run_at": "document_end"
     }
   ],

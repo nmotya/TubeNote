@@ -1,5 +1,7 @@
 
 
+var global = this;
+
 const CLIENT_ID = encodeURIComponent('448793002559-gcai9vbq2tfq60bfains56cugl5dge9d.apps.googleusercontent.com');
 const RESPONSE_TYPE = encodeURIComponent('id_token');
 const REDIRECT_URI = encodeURIComponent('https://odmdklnahihglmjpafakencppfpefmnk.chromiumapp.org')
@@ -40,23 +42,67 @@ const createUser = (idnumber) =>{
     });
 }
 
+const determinePopup = (tab) =>{
+    fetch(`http://localhost:5000/api/users/${userGoogleId}`,{
+        method: "GET"
+    }).then(response => response.json())
+    .then(json => {   
+        console.log(tab);
+        if(json[0].notes.includes(tab)){
+            var array = json[0].notes;
+            var index = array.indexOf(tab);
+            chrome.storage.local.set({note: json[0].notes[index + 1]});
+            chrome.browserAction.setPopup({ popup: './frontend/note.html' });
+        } else if(tab.includes("https://www.youtube.com/watch")){
+            chrome.browserAction.setPopup({ popup: './frontend/input.html' });
+        } else if (json[0].notes.length === 1){
+            chrome.browserAction.setPopup({ popup: './frontend/signed-in.html' });
+        } else{
+            chrome.browserAction.setPopup({ popup: './frontend/note-list.html' });
+        }
+    });
+}
+
+const doesUserExist = (id) =>{
+    fetch(`http://localhost:5000/api/users/${userGoogleId}`,{
+        method: "GET"
+    }).then(response => response.json())
+    .then(json => {
+        if(!json[0]){
+            createUser(id);
+        }
+    });
+}
+
+
+//lisenter for tab change
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+        if (is_user_signed_in()){
+            chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+                determinePopup(tabs[0].url);
+            });
+        }
+}); 
+
+//listener for url change within tab
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-    if(changeInfo && changeInfo.status == "complete"){
-        chrome.tabs.executeScript(tab.ib, {
-            file: 'click-script.js'
-        },() => chrome.runtime.lastError);
+    if(changeInfo && changeInfo.status == "complete" && is_user_signed_in()){
+        chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+            determinePopup(tabs[0].url);
+        });
     }
 });
 
+/*
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.message === "input" && is_user_signed_in() ){
+    if(request.message === "input" && is_user_signed_in()){
         chrome.browserAction.setPopup({ popup: './frontend/input.html' });
     }
-});
+});*/
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.from === 'submit-note'){
-        sendResponse(userGoogleId);
+        sendResponse(this.userGoogleId);
     }
     return true;
 });
@@ -64,7 +110,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === "note-popup"){
         chrome.browserAction.setPopup({ popup: './frontend/note.html' });
-        chrome.executeScript({file: 'note.js'})
     }
 });
 
@@ -90,15 +135,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             console.log(user_info.sub);
                               
                             chrome.identity.getProfileUserInfo(function(userInfo) {
-                                createUser(user_info.sub);
-                                console.log(userInfo.id);
+                               doesUserExist(user_info.sub)
+                               console.log(userInfo.id);
                                console.log(userInfo.email);
                                console.log("afsaf");
-                               });
+                            });
                         user_signed_in = true;
                         sendResponse("success");
-                        chrome.browserAction.setPopup({ popup: './frontend/signed-in.html' });
-                        chrome.tabs.reload();
+                        chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+                            var tab = tabs[0].url
+                            determinePopup(tab);
+                        });
                     } else {
                         // invalid credentials
                         console.log("Invalid credentials.");

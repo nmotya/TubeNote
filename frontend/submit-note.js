@@ -1,6 +1,4 @@
 
-
-
 const putNote = (link, input, google_id) =>{
     chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
         var tab = tabs[0].url
@@ -13,7 +11,10 @@ const putNote = (link, input, google_id) =>{
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
-        });
+        }).then((response) => response.json())
+        .then((responseJson) => {
+         window.close();
+        })
     });
 }
 
@@ -23,8 +24,8 @@ const getGoogleId = (input) => {
             putNote("youtube", input, response);
         }
     });
-    window.close();
     chrome.runtime.sendMessage({message : "note-popup", note: input});
+    chrome.storage.local.set({note: input});
 }
 
 function submitNote(){
@@ -38,6 +39,7 @@ function additionalBs(event){
 }
 
 document.getElementById("submit-button").addEventListener("click", additionalBs);
+
 
 
 
