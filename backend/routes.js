@@ -56,7 +56,10 @@ router.patch("/:google_id", async(req, res) =>{
             res.sendStatus(401);
         }
         userInfo[0].notes.push(req.body.url);
+        userInfo[0].notes.push(req.body.video_name);
+        userInfo[0].notes.push(req.body.video_id);
         userInfo[0].notes.push(req.body.note);
+
         const newInfo = await Member.updateOne(
             {google_id: req.params.google_id},
             {$set: {notes: userInfo[0].notes}}

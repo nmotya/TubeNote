@@ -21,9 +21,10 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*", "https://www.youtube.com/*"], 
+      "matches": ["https://www.youtube.com/watch/*", "https://www.youtube.com/*"], 
       "js":["jquery.js", "./frontend/note.js"], 
-      "run_at": "document_end"
+      "run_at": "document_end",
+      "all_frames": true
     }
   ],
   "browser_action": {

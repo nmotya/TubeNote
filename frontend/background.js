@@ -1,7 +1,4 @@
 
-
-var global = this;
-
 const CLIENT_ID = encodeURIComponent('448793002559-gcai9vbq2tfq60bfains56cugl5dge9d.apps.googleusercontent.com');
 const RESPONSE_TYPE = encodeURIComponent('id_token');
 const REDIRECT_URI = encodeURIComponent('https://odmdklnahihglmjpafakencppfpefmnk.chromiumapp.org')
@@ -55,6 +52,7 @@ const determinePopup = (tab) =>{
             chrome.browserAction.setPopup({ popup: './frontend/note.html' });
         } else if(tab.includes("https://www.youtube.com/watch")){
             chrome.browserAction.setPopup({ popup: './frontend/input.html' });
+
         } else if (json[0].notes.length === 1){
             chrome.browserAction.setPopup({ popup: './frontend/signed-in.html' });
         } else{
@@ -62,6 +60,8 @@ const determinePopup = (tab) =>{
         }
     });
 }
+
+
 
 const doesUserExist = (id) =>{
     fetch(`http://localhost:5000/api/users/${userGoogleId}`,{
@@ -74,6 +74,11 @@ const doesUserExist = (id) =>{
     });
 }
 
+const scraper = () =>{
+    chrome.tabs.executeScript({
+        file: 'title-scraper.js'
+    });
+}
 
 //lisenter for tab change
 chrome.tabs.onActivated.addListener(function(activeInfo) {
@@ -93,12 +98,21 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     }
 });
 
+chrome.windows.onFocusChanged.addListener(function(window) {
+    if (is_user_signed_in()){
+        chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+            determinePopup(tabs[0].url);
+        });
+    }
+});
 /*
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.message === "input" && is_user_signed_in()){
         chrome.browserAction.setPopup({ popup: './frontend/input.html' });
     }
 });*/
+
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.from === 'submit-note'){
@@ -130,9 +144,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     const user_info = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(id_token.split(".")[1]));
                     userGoogleId = user_info.sub;
 
+
                     if ((user_info.iss === 'https://accounts.google.com' || user_info.iss === 'accounts.google.com')
                         && user_info.aud === CLIENT_ID) {  
                             console.log(user_info.sub);
+                            chrome.storage.local.set({id: user_info.sub});
                               
                             chrome.identity.getProfileUserInfo(function(userInfo) {
                                doesUserExist(user_info.sub)
@@ -141,6 +157,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                                console.log("afsaf");
                             });
                         user_signed_in = true;
+                        chrome.tabs.reload();
                         sendResponse("success");
                         chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
                             var tab = tabs[0].url
