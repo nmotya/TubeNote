@@ -22,15 +22,49 @@ hr{
     border-color: #FD5972;
 }
 img{
-    width: 150px;
-    position: relative;
-    bottom: 50px;
+    width: 120px;
+    position: absolute;
+    bottom: -17px;
+    right:272px;
 }
+
+.body-container{
+    background-color: red;
+    position: relative;
+    width: 200px;
+    left: 200px;
+    top:50px;
+
+}
+.note-list-body{
+    position: absolute;
+    bottom: -47px;
+    left: -64px;
+    overflow-wrap: normal;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    hyphens: auto;
+    height:100px;
+}
+
 .note-container{
     height: 100px;
     color:white;
     font-size: 16px;
+    text-shadow: 0px 3px rgba(0,0,0,0.2);
 }
+.p-note-list{
+    font-size: 14px;
+    position: relative;
+    bottom: 10px;
+    left: 3px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+}
+
 #h2-signed-in{
     position: absolute;
     top: 33%;
@@ -81,10 +115,6 @@ img{
 
 
 
-
-
-
-
 /*Default google sign-in button style below*/
 .google-btn {
     width: 184px;
@@ -128,3 +158,4 @@ img{
 }
 @import url(https://fonts.googleapis.com/css?family=Roboto:500);
 /*Default google sign-in button style above*/
+

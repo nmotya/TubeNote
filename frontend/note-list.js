@@ -5,23 +5,30 @@ chrome.storage.local.get("id", function(data) {
     }).then(response => response.json())
     .then(json => {
         var array = json[0].notes;
-        for(var i = 1; i < array.length; i++){
-            i++;
-            var textnode = document.createTextNode(array[i]);
-            i++;
-            var textnode2 = document.createTextNode(array[i]);  
-            var paragraph = document.createElement("p");
-            var paragraph2 = document.createElement("p");                 
-            var div = document.createElement("div");  
-            var line = document.createElement("hr");  
+        for(var i = array.length - 1; i > 0; i--){
+            var textnode2 = document.createTextNode(array[i]); 
+            i--;
             var img = document.createElement("img");
-            img.setAttribute("src", `https://i.ytimg.com/vi/${array[i]}/maxresdefault.jpg`);
+            img.setAttribute("src", `https://i.ytimg.com/vi/${array[i]}/hqdefault.jpg`);
+            
+            i--;
+            var textnode = document.createTextNode(array[i]);
+            i--;
+            var paragraph = document.createElement("p");
+            var body = document.createElement("p");                 
+            var div = document.createElement("div");
+            var bodydiv = document.createElement("div");
+            var line = document.createElement("hr");  
             div.classList.add("note-container");  
+            paragraph.classList.add("p-note-list");
+            body.classList.add("note-list-body");
+            bodydiv.classList.add("body-container");
             paragraph.appendChild(textnode);  
-            paragraph2.appendChild(textnode2);        
+            body.appendChild(textnode2);        
             div.appendChild(paragraph);
-            div.appendChild(paragraph2); 
-            div.appendChild(img);           
+            bodydiv.appendChild(img); 
+            bodydiv.appendChild(body);
+            div.appendChild(bodydiv);  
             document.querySelector("body").appendChild(div); 
             document.querySelector("body").appendChild(line);    
         }
