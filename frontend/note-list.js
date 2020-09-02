@@ -32,9 +32,10 @@ chrome.storage.local.get("id", function(data) {
             document.querySelector("body").appendChild(div); 
             document.querySelector("body").appendChild(line);    
         }
-        var credits = document.createTextNode("Made by Nassim");
-        var creditspara = document.createElement("p");
-        creditspara.appendChild(credits);
-        document.querySelector("body").appendChild(creditspara);  
+        var text = document.createTextNode("Sign Out");
+        var button = document.createElement("button");
+        button.classList.add("sign-out");
+        button.appendChild(text);
+        document.querySelector("body").appendChild(button);
     });
 });

@@ -43,21 +43,22 @@ const determinePopup = (tab) =>{
     fetch(`http://localhost:5000/api/users/${userGoogleId}`,{
         method: "GET"
     }).then(response => response.json())
-    .then(json => {   
-        console.log(tab);
-        if(json[0].notes.includes(tab)){
-            var array = json[0].notes;
-            var index = array.indexOf(tab);
-            chrome.storage.local.set({note: json[0].notes[index + 1]});
-            chrome.browserAction.setPopup({ popup: './frontend/note.html' });
-        } else if(tab.includes("https://www.youtube.com/watch")){
-            chrome.browserAction.setPopup({ popup: './frontend/input.html' });
-
+    .then(json => {  
+        if(tab.includes("https://www.youtube.com/watch")){
+            if(json[0].notes.includes(tab.split("=")[1].split("&")[0])){
+                var array = json[0].notes;
+                var index = array.indexOf(tab.split("=")[1].split("&")[0]);
+                chrome.storage.local.set({note: json[0].notes[index + 1]});
+                chrome.browserAction.setPopup({ popup: './frontend/note.html' });
+            } else{
+                chrome.browserAction.setPopup({ popup: './frontend/input.html' });
+            }
         } else if (json[0].notes.length === 1){
             chrome.browserAction.setPopup({ popup: './frontend/signed-in.html' });
         } else{
             chrome.browserAction.setPopup({ popup: './frontend/note-list.html' });
         }
+        
     });
 }
 
@@ -99,10 +100,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 });
 
 chrome.windows.onFocusChanged.addListener(function(window) {
-    if (is_user_signed_in()){
-        chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
-            determinePopup(tabs[0].url);
-        });
+    if(window != chrome.windows.WINDOW_ID_NONE){
+        if (is_user_signed_in()){
+            chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+                determinePopup(tabs[0].url);
+            });
+        }
     }
 });
 /*
@@ -124,6 +127,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === "note-popup"){
         chrome.browserAction.setPopup({ popup: './frontend/note.html' });
+        chrome.storage.local.set({note: request.note});
     }
 });
 
