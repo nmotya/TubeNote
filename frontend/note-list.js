@@ -1,4 +1,9 @@
 
+var script = document.createElement('script');
+script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+script.type = 'text/javascript';
+document.getElementsByTagName('head')[0].appendChild(script);
+
 chrome.storage.local.get("id", function(data) {
     fetch(`http://localhost:5000/api/users/${data.id}`,{
         method: "GET"
@@ -14,6 +19,8 @@ chrome.storage.local.get("id", function(data) {
             i--;
             var textnode = document.createTextNode(array[i]);
             i--;
+
+   
             var paragraph = document.createElement("p");
             var body = document.createElement("p");                 
             var div = document.createElement("div");
@@ -28,14 +35,25 @@ chrome.storage.local.get("id", function(data) {
             div.appendChild(paragraph);
             bodydiv.appendChild(img); 
             bodydiv.appendChild(body);
-            div.appendChild(bodydiv);  
+            div.appendChild(bodydiv); 
             document.querySelector("body").appendChild(div); 
-            document.querySelector("body").appendChild(line);    
+            document.querySelector("body").appendChild(line);  
         }
         var text = document.createTextNode("Sign Out");
         var button = document.createElement("button");
+        var bottom = document.createElement("div");
+        bottom.classList.add("bottom");
         button.classList.add("sign-out");
         button.appendChild(text);
+        //div.appendChild(button);
         document.querySelector("body").appendChild(button);
+        document.querySelector("body").appendChild(bottom);
+        document.querySelector('button').addEventListener('click', function () {
+            chrome.runtime.sendMessage({ message: 'logout' }, function (response) {
+                if (response === 'success'){
+                    window.close();
+                } 
+            });
+        });
     });
 });

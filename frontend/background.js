@@ -108,6 +108,8 @@ chrome.windows.onFocusChanged.addListener(function(window) {
         }
     }
 });
+
+
 /*
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.message === "input" && is_user_signed_in()){
