@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const Member = require("../usermodel");
+const Member = require("./usermodel");
 
 //Get all users
 router.get("/", async function(req, res){
@@ -31,7 +31,6 @@ router.post("/", async (req, res) =>{
         });
         const savepost = await newMember.save();
         res.json(savepost);
-        console.log("ez");
     } catch(err) {
         res.status("400").json({message: "Error"});
     }
@@ -70,16 +69,6 @@ router.patch("/:google_id", async(req, res) =>{
     }
 });
 
-
-//router.put("/:id", function(req, res){
-  //  const exist = users.some(user => user.id === parseInt(req.params.id));
-   // if (!exist){
-    //    res.status(400).send("Asd");
-   // }  else{
-   //     res.json(users.filter(user => user.id === parseInt(req.params.id)));
-   // }
-    
-//})
 
 
 module.exports = router;

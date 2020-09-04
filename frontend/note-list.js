@@ -1,9 +1,4 @@
 
-var script = document.createElement('script');
-script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
-script.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(script);
-
 chrome.storage.local.get("id", function(data) {
     fetch(`http://localhost:5000/api/users/${data.id}`,{
         method: "GET"
@@ -45,7 +40,6 @@ chrome.storage.local.get("id", function(data) {
         bottom.classList.add("bottom");
         button.classList.add("sign-out");
         button.appendChild(text);
-        //div.appendChild(button);
         document.querySelector("body").appendChild(button);
         document.querySelector("body").appendChild(bottom);
         document.querySelector('button').addEventListener('click', function () {

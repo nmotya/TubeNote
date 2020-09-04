@@ -22,17 +22,17 @@
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/watch/*", "https://www.youtube.com/*"], 
-      "js":["jquery.js", "./frontend/note.js", "./frontend/note-list.js"], 
+      "js":["./frontend/note.js", "./frontend/note-list.js"], 
       "run_at": "document_end",
       "all_frames": true
     }
   ],
   "browser_action": {
-      "default_icon":"jugular.png",
+      "default_icon":"logo.png",
       "default_popup": "frontend/index.html"
   },
   "web_accessible_resources": [
-    "./frontend/input.html",
+    "./frontend/input.html"
   ],
   "content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'"
 }

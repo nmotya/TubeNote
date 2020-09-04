@@ -11,7 +11,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
         $(document).ready(function(){
             var x= $("h1.title.style-scope.ytd-video-primary-info-renderer").text();
             chrome.storage.local.set({vidTitle: x});
-            alert(x);
         });
     }
 });

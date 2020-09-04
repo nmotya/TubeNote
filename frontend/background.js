@@ -110,15 +110,6 @@ chrome.windows.onFocusChanged.addListener(function(window) {
 });
 
 
-/*
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.message === "input" && is_user_signed_in()){
-        chrome.browserAction.setPopup({ popup: './frontend/input.html' });
-    }
-});*/
-
-
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.from === 'submit-note'){
         sendResponse(this.userGoogleId);
@@ -136,14 +127,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'login') {
         if (user_signed_in) {
-            alert("naw");
+            alert("Already logged in");
         } else {
             chrome.identity.launchWebAuthFlow({
                 'url': create_auth_endpoint(),
                 'interactive': true
             }, function (redirect_url) {
                 if (chrome.runtime.lastError) {
-                    alert("STOOPID");
+                    alert("Try Again");
                 } else {
                     let id_token = redirect_url.substring(redirect_url.indexOf('id_token=') + 9);
                     id_token = id_token.substring(0, id_token.indexOf('&'));
@@ -153,14 +144,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                     if ((user_info.iss === 'https://accounts.google.com' || user_info.iss === 'accounts.google.com')
                         && user_info.aud === CLIENT_ID) {  
-                            console.log(user_info.sub);
+
                             chrome.storage.local.set({id: user_info.sub});
                               
                             chrome.identity.getProfileUserInfo(function(userInfo) {
                                doesUserExist(user_info.sub)
-                               console.log(userInfo.id);
-                               console.log(userInfo.email);
-                               console.log("afsaf");
                             });
                         user_signed_in = true;
                         chrome.tabs.reload();
@@ -170,8 +158,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             determinePopup(tab);
                         });
                     } else {
-                        // invalid credentials
-                        console.log("Invalid credentials.");
+                        alert("Invalid credentials.");
                     }
                 }
             });
